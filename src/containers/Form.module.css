@@ -1,5 +1,5 @@
 .Success {
-  background-color: rgb(255, 255, 255);
+  /* background-color: rgb(255, 255, 255); */
   position: fixed;
   color: #000000;
   font-size: 29px;
@@ -13,7 +13,7 @@
   justify-content: center;
   overflow: auto;
   z-index: 99999;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
 }
 .Success span {
   margin-top: -10vh;

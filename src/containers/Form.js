@@ -1,49 +1,93 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Col, Container, Row } from "react-bootstrap";
+
+import { Container, Col, Button } from "react-bootstrap";
 
 import Modal from "../Ui/Modal";
+import Companey from "../Ui/Companey";
+import Spinner from "../Ui/spinner/Spinner";
 
 function Form() {
-  const [vatInput, setVatInput] = useState("");
-  const [result, setResult] = useState(false);
+  const [vatValue, setVatValue] = useState("");
+  const [isVatValid, setIsVatValid] = useState(null);
+  const [companyData, setCompaneyData] = useState({
+    name: "",
+    address: "",
+    requestDate: "",
+    countryCode: "",
+    vatNumber: "",
+  });
+  const [showSpinner, setShowSppiner] = useState(false);
 
   const handelVatState = (event) => {
-    setVatInput(event.target.value);
+    setVatValue(event.target.value);
   };
 
   const closeModalHandler = () => {
-    setResult(false);
+    setIsVatValid(null);
+    setVatValue("");
   };
 
   const onFormSubmit = (event) => {
+    event.preventDefault();
+
+    setShowSppiner(true);
     axios
       .get("https://vat.erply.com/numbers?vatNumber=BG999999999")
       .then((response) => {
-        let inputCountryCode = VatInput.slice(0, 2);
-        let inputVatCode = VatInput.slice(2);
+        const inputCountryCode = vatValue.substring(0, 2);
+        const inputVatCode = vatValue.substring(2);
+        setCompaneyData({
+          name: response.data.Name,
+          address: response.data.Address,
+          requestDate: response.data.RequestDate,
+          countryCode: response.data.CountryCode,
+          vatNumber: response.data.VATNumber,
+        });
+
         if (
           inputCountryCode === response.data.CountryCode &&
           inputVatCode === response.data.VATNumber
         ) {
-          console.log(response);
-          setResult(true);
+          setIsVatValid(true);
+          setShowSppiner(false);
+        } else {
+          setIsVatValid(false);
+          setShowSppiner(false);
         }
       })
       .catch((error) => {
         console.log(error);
       });
-    event.preventDefault();
+  };
+
+  const getResultRepresentation = () => {
+    if (isVatValid === null) {
+      return null;
+    }
+
+    if (isVatValid) {
+      return (
+        <Companey
+          name={companyData.name}
+          address={companyData.address}
+          countryCode={companyData.countryCode}
+          requestDate={companyData.requestDate}
+          vatNumber={companyData.vatNumber}
+          clicked={closeModalHandler}
+        />
+      );
+    } else {
+      return <Modal clicked={closeModalHandler} />;
+    }
   };
 
   return (
-    <Container fluid className="justify-content-center">
-      <Row>
+    <Container>
+      <Col>
         <Col>
           <h4>VAT Validator</h4>
         </Col>
-      </Row>
-      <Row className="justify-content-center">
         <form onSubmit={onFormSubmit}>
           <Col>
             <label className="text-muted">Please Enter A Vat Number:</label>
@@ -52,38 +96,21 @@ function Form() {
             <input
               type="text"
               name="VatInput"
-              placeholder="Please Enter A Vat Number"
+              // placeholder="Please Enter A Vat Number"
+              value={vatValue}
               onChange={handelVatState}
             />
           </Col>
-
           <br />
-          <input type="submit" value="Let'Go" />
+          <Button type="submit" variant="secondary" size="lg">
+            Let's Go
+          </Button>
         </form>
-      </Row>
-      <Row>
-        <Col>
-          <label className="text-muted">Result : </label>
-
-          {result ? (
-            <Modal clicked={closeModalHandler} />
-          ) : (
-            <div>{vatInput}</div>
-          )}
-        </Col>
-      </Row>
+        <br />
+        {showSpinner ? <Spinner /> : getResultRepresentation()}
+      </Col>
     </Container>
   );
 }
 
 export default Form;
-
-// let inputCountryCode = this.state.vatInput.slice(0, 2);
-// let inputVatCode = this.state.vatInput.slice(2);
-// if (
-//   inputCountryCode === response.data.CountryCode &&
-//   inputVatCode === response.data.VATNumber
-// ) {
-//   console.log("it is");
-//   this.setState({ result: true });
-// }

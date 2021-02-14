@@ -1,13 +1,11 @@
 import { Container } from "react-bootstrap";
 import "./App.css";
-// import Form from "./containers/Form";
-import VatForm from "./containers/VatForm";
+import Form from "./containers/Form";
 
 function App() {
   return (
     <Container className="App">
-      {/* <Form /> */}
-      <VatForm />
+      <Form />
     </Container>
   );
 }
