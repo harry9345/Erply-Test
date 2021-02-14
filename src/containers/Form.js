@@ -17,20 +17,22 @@ function Form() {
     countryCode: "",
     vatNumber: "",
   });
-  const [showSpinner, setShowSppiner] = useState(false);
+  const [showSpinner, setShowSppiner] = useState(false); // spinner state
 
+  // set the input value
   const handelVatState = (event) => {
     setVatValue(event.target.value);
   };
 
+  // to close the modal
   const closeModalHandler = () => {
     setIsVatValid(null);
     setVatValue("");
   };
 
+  // to submit form and sending request to the end point
   const onFormSubmit = (event) => {
     event.preventDefault();
-
     setShowSppiner(true);
     axios
       .get("https://vat.erply.com/numbers?vatNumber=BG999999999")
@@ -61,6 +63,7 @@ function Form() {
       });
   };
 
+  // conditions to what should render on DOM
   const getResultRepresentation = () => {
     if (isVatValid === null) {
       return null;
@@ -86,7 +89,7 @@ function Form() {
     <Container>
       <Col>
         <Col>
-          <h4>VAT Validator</h4>
+          <h1>VAT Validator</h1>
         </Col>
         <form onSubmit={onFormSubmit}>
           <Col>
@@ -96,7 +99,6 @@ function Form() {
             <input
               type="text"
               name="VatInput"
-              // placeholder="Please Enter A Vat Number"
               value={vatValue}
               onChange={handelVatState}
             />
@@ -107,6 +109,7 @@ function Form() {
           </Button>
         </form>
         <br />
+        {/* condition for sppiner */}
         {showSpinner ? <Spinner /> : getResultRepresentation()}
       </Col>
     </Container>

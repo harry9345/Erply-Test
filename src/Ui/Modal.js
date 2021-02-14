@@ -8,11 +8,9 @@ const Modal = (props) => {
     <Container className={Classes.Success} onClick={props.clicked}>
       <Col>
         <p>Inccorect VAT Number!! </p>
-
         <br />
-
         <Button variant="secondary" size="lg">
-          Try Again
+          Please Try Again
         </Button>
       </Col>
     </Container>
