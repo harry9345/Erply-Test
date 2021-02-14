@@ -1,4 +1,7 @@
-# Getting Started with Create React App
+Getting Started with Create React App
+ Please run npm install and open Localhost:300 . \
+ Used axios to get data from the API .\
+ due to very slow respond from the API , I use spinner to show.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
